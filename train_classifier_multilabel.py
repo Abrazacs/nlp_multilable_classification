@@ -5,6 +5,7 @@ from transformers import BertTokenizer, get_scheduler
 from torch.optim import AdamW
 from model import BertForMultiLabelClassification
 from sklearn.preprocessing import MultiLabelBinarizer
+from sklearn.metrics import precision_score, recall_score, f1_score
 import joblib
 from preprocess import clean_text
 from tqdm import tqdm
@@ -22,7 +23,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 save_dir = "multilabel_model"
 validation_split = 0.1
 logger_name = "train_classifier_multilabel"
-
+confidence_threshold = 0.7
 
 with open('logging_config.yaml', 'r') as f:
     config = yaml.safe_load(f.read())
@@ -116,7 +117,9 @@ for epoch in range(num_epochs):
     avg_train_loss = train_loss / len(train_loader)
     logger.info(f"Train loss: {avg_train_loss:.4f}")
 
-    # Валидация
+    all_preds = []
+    all_labels = []
+
     model.eval()
     val_loss = 0.0
 
@@ -130,10 +133,25 @@ for epoch in range(num_epochs):
             )
             val_loss += outputs["loss"].item()
 
-    avg_val_loss = val_loss / len(val_loader)
-    logger.info(f"Validation loss: {avg_val_loss:.4f}")
+            logits = outputs["logits"]
+            preds = torch.sigmoid(logits)  # применяем сигмоиду
+            preds = (preds >= confidence_threshold).float()  # бинаризуем по порогу
 
-    # Сохраняем только лучшую модель
+            all_preds.append(preds.cpu())
+            all_labels.append(batch["labels"].cpu())
+
+    avg_val_loss = val_loss / len(val_loader)
+    all_preds = torch.cat(all_preds, dim=0).numpy()
+    all_labels = torch.cat(all_labels, dim=0).numpy()
+    precision = precision_score(all_labels, all_preds, average="macro", zero_division=0)
+    recall = recall_score(all_labels, all_preds, average="macro", zero_division=0)
+    f1 = f1_score(all_labels, all_preds, average="macro", zero_division=0)
+
+    logger.info(f"Val loss: {avg_val_loss:.4f}")
+    logger.info(f"Precision: {precision:.4f}")
+    logger.info(f"Recall: {recall:.4f}")
+    logger.info(f"F1: {f1:.4f}")
+
     if avg_val_loss < best_val_loss:
         best_val_loss = avg_val_loss
         logger.info(f"✅ Новая модель! Сохраняем в папку {save_dir}")
