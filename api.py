@@ -1,14 +1,17 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from pipeline import TextClassifierPipeline
+from multilable_pipline import TextClassifierPipeline
+import os
 
 app = FastAPI()
 
-# Загружаем пайплайн при старте
+mlb_path = os.path.join("multilabel_model", "mlb.pkl")
+assert os.path.exists(mlb_path), f"File {mlb_path} not found!"
+
 pipeline = TextClassifierPipeline(
     model_path="multilabel_model",
     tokenizer_path="multilabel_model",
-    mlb_path="mlb.pkl"
+    mlb_path=mlb_path
 )
 
 class PredictRequest(BaseModel):
