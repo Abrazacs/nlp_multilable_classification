@@ -10,6 +10,8 @@ from preprocess import clean_text
 from tqdm import tqdm
 import os
 import logging
+from logging import config
+import yaml
 
 model_checkpoint = "bert-base-multilingual-cased"
 num_epochs = 5
@@ -19,17 +21,22 @@ learning_rate = 2e-5
 device = "cuda" if torch.cuda.is_available() else "cpu"
 save_dir = "multilabel_model"
 validation_split = 0.1
+logger_name = "train_classifier_multilabel"
 
-logger = logging.getLogger(__name__)
 
-logger.info("Loading dataset...")
+with open('logging_config.yaml', 'r') as f:
+    config = yaml.safe_load(f.read())
+    logging.config.dictConfig(config)
+
+logger = logging.getLogger(logger_name)
+
 df = pd.read_csv("dataset.csv")
 
 df["text"] = df["text"].apply(clean_text)
 df["labels"] = df["labels"].apply(lambda x: x.split(","))
 
 mlb = MultiLabelBinarizer()
-logger.info("Обучение модели")
+logger.info("Инициализация MultiLabelBinarizer")
 y = mlb.fit_transform(df["labels"])
 
 os.makedirs(save_dir, exist_ok=True)
@@ -63,11 +70,13 @@ dataset = TextDataset(df["text"].tolist(), y)
 
 val_size = int(len(dataset) * validation_split)
 train_size = len(dataset) - val_size
+logger.info("Разделение на тренировочную и валидационную выборки")
 train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
 
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
 
+logger.info("Инициализация модели")
 model = BertForMultiLabelClassification.from_pretrained(model_checkpoint, num_labels=len(mlb.classes_))
 model.to(device)
 
@@ -79,8 +88,9 @@ lr_scheduler = get_scheduler(
 
 best_val_loss = float('inf')
 
+logger.info("Тренировка модели")
 for epoch in range(num_epochs):
-    logger.info(f"\nEpoch {epoch + 1}/{num_epochs}")
+    logger.info(f"Epoch: {epoch + 1}/{num_epochs}")
     model.train()
     train_loss = 0.0
 
@@ -126,7 +136,7 @@ for epoch in range(num_epochs):
     # Сохраняем только лучшую модель
     if avg_val_loss < best_val_loss:
         best_val_loss = avg_val_loss
-        logger.info(f"✅ New best model! Saving to {save_dir}")
+        logger.info(f"✅ Новая модель! Сохраняем в папку {save_dir}")
         model.save_pretrained(save_dir)
         tokenizer.save_pretrained(save_dir)
 
