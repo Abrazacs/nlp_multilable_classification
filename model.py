@@ -17,7 +17,7 @@ class BertForMultiLabelClassification(BertPreTrainedModel):
 
         loss = None
         if labels is not None:
-            loss_fct = nn.BCEWithLogitsLoss()
+            loss_fct = nn.MultiLabelSoftMarginLoss()
             loss = loss_fct(logits, labels)
 
         return {"loss": loss, "logits": logits}
