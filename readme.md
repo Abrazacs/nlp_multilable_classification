@@ -54,8 +54,6 @@ python train_classifier_multilabel.py
 
 `learning_rate` - скорость обучения
 
-`confidence_threshold` - порог для классификации
-
 ## Запуск API
 После обучения модели запустите FastAPI сервер:
 ```bash

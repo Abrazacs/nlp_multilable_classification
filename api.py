@@ -22,7 +22,7 @@ class PredictResponse(BaseModel):
 
 @app.post("/predict", response_model=PredictResponse)
 async def predict(request: PredictRequest):
-    labels = pipeline.predict(request.text)
+    labels = pipeline.predict(request.text, threshold=0.6)
     return PredictResponse(labels=labels)
 
 @app.get("/")

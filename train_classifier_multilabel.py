@@ -134,8 +134,8 @@ for epoch in range(num_epochs):
             val_loss += outputs["loss"].item()
 
             logits = outputs["logits"]
-            preds = torch.sigmoid(logits)  # применяем сигмоиду
-            preds = (preds >= confidence_threshold).float()  # бинаризуем по порогу
+            preds = torch.sigmoid(logits)
+            preds = (preds >= confidence_threshold).float()
 
             all_preds.append(preds.cpu())
             all_labels.append(batch["labels"].cpu())
