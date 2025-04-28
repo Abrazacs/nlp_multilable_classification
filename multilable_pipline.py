@@ -12,6 +12,21 @@ class TextClassifierPipeline:
         self.mlb = joblib.load(mlb_path)
 
     def predict(self, text: str, threshold: float = 0.5):
+        """
+        Формирует предсказание меток для переданного текста
+
+        Parameters
+        ----------
+        text : str
+            Текст, для которого необходимо предсказать метки.
+        threshold : float, optional
+            Порог, используемый для классификации, по умолчанию 0.5
+
+        Returns
+        -------
+        list
+            Список предсказанных меток.
+        """
         text = clean_text(text)
 
         encoding = self.tokenizer(
