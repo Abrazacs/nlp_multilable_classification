@@ -59,7 +59,7 @@ python train_classifier_multilabel.py
 ```bash
 uvicorn app:api --port 8080 --reload
 ```
-API доступно по адресу http://127.0.0.1:8000
+API доступно по адресу http://127.0.0.1:8080
 
 ### Методы API:
 
@@ -70,7 +70,7 @@ API доступно по адресу http://127.0.0.1:8000
 Пример запроса:
 
 ```bash
-curl -X POST "http://127.0.0.1:8000/predict" \
+curl -X POST "http://127.0.0.1:8080/predict" \
 -H "Content-Type: application/json" \
 -d '{"text":"Пример текста для классификации"}'
 ```
