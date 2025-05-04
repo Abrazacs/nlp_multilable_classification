@@ -9,13 +9,6 @@
 - Логирование обучения и предсказаний
 - Предобработка текста (очистка, нормализация)
 
-## Установка
-
-1. Клонируйте репозиторий:
-```bash
-git clone https://github.com/Abrazacs/nlp_multilable_classification.git
-cd nlp_multilable_classification
-```
 ## Особенности
 - Поддержка многоклассовой классификации
 - Использование предобученной модели `bert-base-multilingual-cased`
@@ -90,7 +83,7 @@ curl -X POST "http://127.0.0.1:8080/predict" \
 }
 ```
 
-<img src="20250504213607.gif" width="700" height="500"/>
+<img src="20250504213607.gif" width="700" height="400"/>
 
 ## Требования:
 Полный список зависимостей в `requirements.txt`
