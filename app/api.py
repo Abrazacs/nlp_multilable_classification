@@ -1,16 +1,17 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from multilable_pipline import TextClassifierPipeline
+from app.multilable_pipline import TextClassifierPipeline
 import os
 
 app = FastAPI()
+model_path = "app/multilabel_model"
 
-mlb_path = os.path.join("multilabel_model", "mlb.pkl")
+mlb_path = os.path.join(model_path, "mlb.pkl")
 assert os.path.exists(mlb_path), f"File {mlb_path} not found!"
 
 pipeline = TextClassifierPipeline(
-    model_path="multilabel_model",
-    tokenizer_path="multilabel_model",
+    model_path=model_path,
+    tokenizer_path=model_path,
     mlb_path=mlb_path
 )
 
