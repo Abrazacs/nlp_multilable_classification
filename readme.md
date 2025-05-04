@@ -90,7 +90,7 @@ curl -X POST "http://127.0.0.1:8000/predict" \
 }
 ```
 
-<img src="20250504213607.gif" width="500" height="700"/>
+<img src="20250504213607.gif" width="700" height="500"/>
 
 ## Требования:
 Полный список зависимостей в `requirements.txt`
