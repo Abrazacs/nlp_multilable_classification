@@ -36,7 +36,7 @@ nlp_multilable_classification/
 │   └── train_classifier_multilabel.py  # Скрипт обучения модели
 ├── EDA/
 │   ├── DatasetsEDA.ipynb         # Исследовательский анализ данных
-│   └── 20250504213607.gif        # Визуализация (например, GIF из EDA)
+├── 20250504213607.gif            # Визуализация 
 ├── readme.md                     # Описание проекта
 ├── requirements.txt              # Зависимости проекта
 ```
