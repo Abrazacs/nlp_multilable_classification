@@ -1,8 +1,8 @@
 import torch
 from transformers import BertTokenizer
 import joblib
-from model import BertForMultiLabelClassification
-from preprocess import clean_text
+from app.model import BertForMultiLabelClassification
+from app.preprocess import clean_text
 
 class TextClassifierPipeline:
     def __init__(self, model_path: str, tokenizer_path: str, mlb_path: str, device=None):

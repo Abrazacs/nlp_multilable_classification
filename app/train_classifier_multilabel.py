@@ -3,11 +3,11 @@ import torch
 from torch.utils.data import DataLoader, Dataset, random_split
 from transformers import BertTokenizer, get_scheduler
 from torch.optim import AdamW
-from model import BertForMultiLabelClassification
+from app.model import BertForMultiLabelClassification
 from sklearn.preprocessing import MultiLabelBinarizer
 from sklearn.metrics import precision_score, recall_score, f1_score
 import joblib
-from preprocess import clean_text
+from app.preprocess import clean_text
 from tqdm import tqdm
 import os
 import logging

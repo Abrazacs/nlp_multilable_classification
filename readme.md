@@ -16,6 +16,31 @@
 - Логирование обучения и предсказаний
 - Предобработка текста (очистка, нормализация)
 
+## Структура проекта
+```
+nlp_multilable_classification/
+├── app/
+│   ├── multilabel_model/         # Сохранённые файлы модели и токенизатора
+│   │   ├── config.json
+│   │   ├── mlb.pkl               
+│   │   ├── model.safetensors   
+│   │   ├── special_tokens_map.json
+│   │   ├── tokenizer_config.json
+│   │   └── vocab.txt
+│   ├── api.py                    # FastAPI приложение для инференса
+│   ├── dataset.csv               # Датасет для обучения/тестирования
+│   ├── logging_config.yaml       # Конфигурация логгирования
+│   ├── model.py                  # Архитектура модели
+│   ├── multilable_pipline.py     # Основной pipeline обработки и инференса
+│   ├── preprocess.py             # Препроцессинг данных
+│   └── train_classifier_multilabel.py  # Скрипт обучения модели
+├── EDA/
+│   ├── DatasetsEDA.ipynb         # Исследовательский анализ данных
+├── 20250504213607.gif            # Визуализация 
+├── readme.md                     # Описание проекта
+├── requirements.txt              # Зависимости проекта
+```
+
 ## Установка
 
 1. Клонируйте репозиторий:
@@ -50,7 +75,7 @@ python train_classifier_multilabel.py
 ## Запуск API
 После обучения модели запустите FastAPI сервер:
 ```bash
-uvicorn app:api --port 8080 --reload
+ uvicorn app.api:app --port 8080 --reload
 ```
 API доступно по адресу http://127.0.0.1:8080
 
