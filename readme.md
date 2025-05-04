@@ -57,7 +57,7 @@ python train_classifier_multilabel.py
 ## Запуск API
 После обучения модели запустите FastAPI сервер:
 ```bash
-uvicorn app:app --reload
+uvicorn app:api --port 8080 --reload
 ```
 API доступно по адресу http://127.0.0.1:8000
 
@@ -74,6 +74,23 @@ curl -X POST "http://127.0.0.1:8000/predict" \
 -H "Content-Type: application/json" \
 -d '{"text":"Пример текста для классификации"}'
 ```
+
+Запрос:
+```json
+{
+  "text": "Со счетом 2:1 мы выиграли у Англичан"
+}
+```
+Ответ:
+```json
+{
+    "labels": [
+        "спорт"
+    ]
+}
+```
+
+<img src="20250504213607.gif" width="100" height="100"/>
 
 ## Требования:
 Полный список зависимостей в `requirements.txt`
