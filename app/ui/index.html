@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Тестирование API</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+      color: #333;
+    }
+    header {
+      background: #2c3e50;
+      color: #ecf0f1;
+      padding: 1rem;
+      text-align: center;
+    }
+    main {
+      max-width: 600px;
+      margin: 2rem auto;
+      background: #ffffff;
+      padding: 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border-radius: 4px;
+    }
+    textarea {
+      width: 100%;
+      min-height: 120px;
+      margin-bottom: 1rem;
+      padding: 0.5rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      resize: vertical;
+    }
+    button {
+      background: #27ae60;
+      color: #fff;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:disabled {
+      background: #95a5a6;
+      cursor: default;
+    }
+    #result {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: #ecf0f1;
+      border-radius: 4px;
+    }
+    #status {
+      font-size: 0.9rem;
+      color: #888;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Ручное тестирование</h1>
+</header>
+
+<main>
+  <div id="status">Проверка сервера...</div>
+
+  <textarea id="inputText" placeholder="Вставьте текст для классификации"></textarea>
+  <br />
+  <button id="btnPredict" disabled>Предсказать метки</button>
+
+  <div id="result" style="display:none;">
+    <strong>Результат:</strong>
+    <pre id="labels"></pre>
+  </div>
+</main>
+
+<script>
+  const statusEl = document.getElementById('status');
+  const btn = document.getElementById('btnPredict');
+  const input = document.getElementById('inputText');
+  const resultBlock = document.getElementById('result');
+  const labelsPre = document.getElementById('labels');
+
+  // Проверяем работу сервера
+  fetch('/').then(res => {
+    if (!res.ok) throw new Error(res.status);
+    return res.json();
+  })
+  .then(data => {
+    statusEl.textContent = data.message || 'Сервер отвечает';
+    btn.disabled = false;
+  })
+  .catch(err => {
+    statusEl.textContent = 'Ошибка подключения к серверу';
+    console.error(err);
+  });
+
+  btn.addEventListener('click', () => {
+    const text = input.value.trim();
+    if (!text) return;
+
+    btn.disabled = true;
+    statusEl.textContent = 'Отправка запроса...';
+    resultBlock.style.display = 'none';
+
+    fetch('/predict', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text })
+    })
+    .then(res => res.json())
+    .then(json => {
+      labelsPre.textContent = JSON.stringify(json.labels, null, 2);
+      resultBlock.style.display = 'block';
+      statusEl.textContent = 'Готово';
+    })
+    .catch(e => {
+      statusEl.textContent = 'Ошибка при запросе';
+      console.error(e);
+    })
+    .finally(() => {
+      btn.disabled = false;
+    });
+  });
+</script>
+
+</body>
+</html>
