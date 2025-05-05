@@ -9,7 +9,7 @@
 - Логирование обучения и предсказаний
 - Предобработка текста (очистка, нормализация)
 
-## Структура проекта
+## Структура проекта (после обучения)
 ```
 nlp_multilable_classification/
 ├── app/
@@ -49,11 +49,11 @@ pip install -r requirements.txt
 
 # Использование
 ## Обучение модели
-Поместите ваш датасет dataset.csv в корневую директорию (формат: колонки text и labels, где labels разделены запятыми).
+Поместите ваш датасет dataset.csv в директорию `./app`  (формат: колонки text и labels, где labels разделены запятыми).
 
 Запустите обучение:
 ```bash
-python train_classifier_multilabel.py
+python ./app/train_classifier_multilabel.py
 ```
 
 ## Настройки обучения
