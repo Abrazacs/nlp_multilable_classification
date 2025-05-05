@@ -1,9 +1,16 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from app.multilable_pipline import TextClassifierPipeline
+from fastapi.staticfiles import StaticFiles
 import os
 
 app = FastAPI()
+app.mount(
+    "/ui",
+    StaticFiles(directory=os.path.join(os.path.dirname(__file__), "ui"), html=True),
+    name="ui"
+)
+
 model_path = "app/multilabel_model"
 
 mlb_path = os.path.join(model_path, "mlb.pkl")
